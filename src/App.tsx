@@ -2,16 +2,18 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import Home from './home';
-import FeeDetailsPage from "./fees";
+import LandingPage from './pages/LandingPage';
+import FeeManagementPage from "./pages/FeeManagementPage";
+import HomePage from "./pages/HomePage";
 
 //https://www.codeconcisely.com/posts/react-navigation/
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="fees" element={<FeeDetailsPage />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="dashboard" element={<HomePage />} />
+        <Route path="fees" element={<FeeManagementPage/>} />
       </Routes>
     </div>
   );

@@ -41,6 +41,66 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
             crossorigin="anonymous"
     />
+    <script>
+      window.googletokens={};
+      window.googletokens.tokenClient = null;
+      window.googletokens.accessToken = null;
+      window.googletokens.pickerInited = false;
+      window.googletokens.gisInited = false;
+      window.googletokens.gapiInited = false;
+
+      // Use the API Loader script to load google.picker
+      function onApiLoad() {
+        gapi.load('picker', onPickerApiLoad);
+        gapi.load('client', initializeGapiClient);
+
+      }
+
+      function onPickerApiLoad() {
+        window.googletokens.pickerInited = true;
+      }
+
+      async function initializeGapiClient() {
+        await gapi.client.init({
+          apiKey: 'AIzaSyBBUcAG3HF_tY_CdVmaBvBuJyA6jhtuQqg',
+          discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'],
+        });
+        window.googletokens.gapiInited = true;
+      }
+
+      function gisLoaded() {
+        // TODO(developer): Replace with your client ID and required scopes.
+        window.googletokens.tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: '5153499728-7qcksjj51o5cs75l6mjeiavqas9fu2p7.apps.googleusercontent.com',
+          scope: 'https://www.googleapis.com/auth/drive',
+          callback: '', // defined later
+        });
+        window.googletokens.gisInited = true;
+      }
+
+      function renderButton(element, callback) {
+        {
+          function handleCredentialResponse(response) {
+            console.log('response received')
+            callback(response.credential);
+          }
+          google.accounts.id.initialize({
+            client_id: '5153499728-7qcksjj51o5cs75l6mjeiavqas9fu2p7.apps.googleusercontent.com',
+            callback: handleCredentialResponse,
+            allowed_parent_origin: 'http://localhost'
+          });
+         google.accounts.id.renderButton(element, {
+            theme: 'outline',
+            size: 'large'
+            //click_listener: callback
+          });
+          google.accounts.id.prompt(); // also display the One Tap dialog
+        }
+      }
+    </script>
+    <!-- Load the Google API Loader script. -->
+<!--    <script async defer src="https://apis.google.com/js/api.js" onload="onApiLoad()"></script>-->
+<!--    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>-->
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

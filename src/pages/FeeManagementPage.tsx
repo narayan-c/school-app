@@ -2,10 +2,10 @@ import { useState, useRef, useEffect, SetStateAction} from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import StudentListComponent from "./components/StudentList/studentListComponent";
-import FeeDetailComponent from "./components/FeeDetail/FeeDetailComponent";
-import PaymentDetailComponent from "./components/PaymentDetail/PaymentDetailComponent";
-import NewPaymentComponent from "./components/NewPayment/NewPaymentComponent";
+import StudentListComponent from "../components/StudentList/studentListComponent";
+import FeeDetailComponent from "../components/FeeDetail/FeeDetailComponent";
+import PaymentDetailComponent from "../components/PaymentDetail/PaymentDetailComponent";
+import NewPaymentComponent from "../components/NewPayment/NewPaymentComponent";
 
 export default function FeeDetailsPage() {
     const ref = useRef(null);
