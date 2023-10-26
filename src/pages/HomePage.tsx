@@ -2,10 +2,13 @@
 // Path: src/LandingPage.tsx
 
 
+import {useSelector} from "react-redux";
+
 function HomePage() {
+    const loginInfo = useSelector((state: any) => state.gauth);
     return (
         <div>
-            <h1>Landing Page</h1>
+            <h1>Landing Page {loginInfo.name}</h1>
             <p> Landing done</p>
         </div>
     )

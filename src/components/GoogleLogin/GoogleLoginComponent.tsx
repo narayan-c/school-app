@@ -1,8 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
 import jwt_decode from "jwt-decode";
+import {useDispatch} from "react-redux";
+import {gauthslice} from "./GAuthSlice";
 //https://rangen.medium.com/dynamically-load-google-scripts-with-react-and-the-useeffect-hook-3700b908e50f
 function GoogleLoginComponent (props) {
     const [isGISLoaded, setGISLoaded] = useState(false);
+    const dispatch = useDispatch()
     const ref = useRef(null);
 
     const signinstart = (credential) => {
@@ -22,6 +25,15 @@ function GoogleLoginComponent (props) {
             }
             // @ts-ignore
             window.googletokens.accessToken = response.access_token;
+            // update the redux store with the token and the user details.
+            dispatch({type: gauthslice.actions.login, payload: {
+                    isLoggedIn: true,
+                    name: responsePayload.name,
+                    email: responsePayload.email,
+                    accessToken: response.access_token,
+                    scope: response.scope,
+                    expires_in: response.expires_in
+            }});
             props.callback(response.access_token);
         };
         // @ts-ignore
