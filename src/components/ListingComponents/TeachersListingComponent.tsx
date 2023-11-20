@@ -5,7 +5,7 @@ import InPlaceEditingTableComponent, {
 import {useEffect, useState} from "react";
 
 
-const url = 'http://localhost:4000/teachers/getallteachers'; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const url = 'https://pps-api.onrender.com/teachers/getallteachers'; //'https://pps-api.onrender.com/getStudents/getallstudents';
 
 interface TeacherProperties {
     empid: string,

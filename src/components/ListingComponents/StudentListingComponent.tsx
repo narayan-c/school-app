@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {Navigate, useNavigate} from "react-router-dom";
 
 
-const url = 'http://localhost:4000/students/getallstudents'; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const url = 'https://pps-api.onrender.com/students/getallstudents'; //'https://pps-api.onrender.com/getStudents/getallstudents';
 let navigate; // For navigation with React Router
 
 interface StudentProperties {

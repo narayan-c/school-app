@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 
 
-const url = 'http://localhost:4000/teachers/getallcoreports'; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const url = 'https://pps-api.onrender.com/teachers/getallcoreports'; //'https://pps-api.onrender.com/getStudents/getallstudents';
 
 interface FeeReportProperties {
     empid: string,

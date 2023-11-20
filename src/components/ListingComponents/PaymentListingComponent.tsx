@@ -6,8 +6,8 @@ import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 
 
-const url = 'http://localhost:4000/students/getpaymentdetails'; //'https://pps-api.onrender.com/getStudents/getallstudents';
-const newidurl = 'http://localhost:4000/students/getnewpaymentid'; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const url = 'https://pps-api.onrender.com/students/getpaymentdetails'; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const newidurl = 'https://pps-api.onrender.com/students/getnewpaymentid'; //'https://pps-api.onrender.com/getStudents/getallstudents';
 
 interface PaymentProperties {
     paymentid: string,
