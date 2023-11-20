@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {Form, Button, Col, Container, Row} from "react-bootstrap";
 import Modal from '@mui/material/Modal';
+import {Config} from "../../config";
 
 
-const paymentURL = 'https://pps-api.onrender.com/getStudents/addpaymentdetails?';
+const paymentURL = `${Config.BASE_URL}/getStudents/addpaymentdetails?`;
 
 export default function NewPaymentComponent(props) {
     const [qrModalOpen, setQRModalOpen] = React.useState(false);

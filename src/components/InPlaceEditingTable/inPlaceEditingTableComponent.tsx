@@ -347,7 +347,7 @@ export default function InPlaceEditingTableComponent<T>(props: InPlaceEditingTab
 
     return (
         <div>
-            <CommonHeaderComponent<T> column={props.displayColumns} samplerow={originalList[0]}/>
+            <CommonHeaderComponent<T> column={props.displayColumns} samplerow={props.newEntryData}/>
             <ModalInput></ModalInput>
             <div className="text-end"><input type="text" onChange={(e)=>handleFilter(e.target.value)}/></div>
             <DataTable

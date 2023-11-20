@@ -4,9 +4,10 @@ import InPlaceEditingTableComponent, {
 } from "../InPlaceEditingTable/inPlaceEditingTableComponent";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
+import {Config} from "../../config";
 
 
-const url = 'https://pps-api.onrender.com/teachers/getallcoreports'; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const url = `${Config.BASE_URL}/teachers/getallcoreports`; //'https://pps-api.onrender.com/getStudents/getallstudents';
 
 interface FeeReportProperties {
     empid: string,

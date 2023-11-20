@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
+import {Config} from "../../config";
 
 
-const paymentDetailURL = 'https://pps-api.onrender.com/getStudents/getpaymentdetails?';
+const paymentDetailURL = `${Config.BASE_URL}/getStudents/getpaymentdetails?`;
 interface PaymentDetailProperties {
     paymentamount: string,
     date: string,

@@ -4,9 +4,10 @@ import InPlaceEditingTableComponent, {
 } from "../InPlaceEditingTable/inPlaceEditingTableComponent";
 import {useEffect, useState} from "react";
 import {Navigate, useNavigate} from "react-router-dom";
+import {Config} from "../../config";
 
 
-const url = 'https://pps-api.onrender.com/students/getallstudents'; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const url = `${Config.BASE_URL}/students/getallstudents`; //'https://pps-api.onrender.com/getStudents/getallstudents';
 let navigate; // For navigation with React Router
 
 interface StudentProperties {

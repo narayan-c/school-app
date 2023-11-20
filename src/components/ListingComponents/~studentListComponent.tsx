@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import DataTable from 'react-data-table-component';
+import {Config} from "../../config";
 
 
-const url = 'https://pps-api.onrender.com/getStudents/getallstudents';
+const url = `${Config.BASE_URL}/getStudents/getallstudents`;
 
 function FilterComponent(props: { onClear: () => void, onFilter: (e) => void, filterText: string }) {
     return null;

@@ -4,11 +4,12 @@ import InPlaceEditingTableComponent, {
 } from "../InPlaceEditingTable/inPlaceEditingTableComponent";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
+import {Config} from "../../config";
 
 
-const url = 'https://pps-api.onrender.com/students/getpaymentdetails'; //'https://pps-api.onrender.com/getStudents/getallstudents';
-const newidurl = 'https://pps-api.onrender.com/students/getnewpaymentid'; //'https://pps-api.onrender.com/getStudents/getallstudents';
-
+const url = `${Config.BASE_URL}/students/getpaymentdetails`; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const newidurl = `${Config.BASE_URL}/students/getnewpaymentid`; //'https://pps-api.onrender.com/getStudents/getallstudents';
+const studentInfoURL = `${Config.BASE_URL}/students/getstudentinfo`;
 interface PaymentProperties {
     paymentid: string,
     srno: string,
@@ -165,10 +166,21 @@ export default function PaymentListingComponent() {
             // set newEntryData with the things that we know will remain same for newly created entries.
             //srno, name, classname, ay.
             let paymentNewEntryData = {paymentid: '', srno: '', name: '', classname: '', ay: '', paymentamount: 0, date: '', notes: '', omit: false};
-            paymentNewEntryData.srno = studentList[0].srno;
-            paymentNewEntryData.name = studentList[0].name;
-            paymentNewEntryData.ay = studentList[0]['admission ay'];
-            paymentNewEntryData.classname = studentList[0].classname;
+            if(studentList.length > 0) {
+                paymentNewEntryData.srno = studentList[0].srno;
+                paymentNewEntryData.name = studentList[0].name;
+                paymentNewEntryData.ay = studentList[0]['admission ay'];
+                paymentNewEntryData.classname = studentList[0].classname;
+            } else {
+                // fetch student information for this srno and fill the name, classname in paymentNewEntryData from there.
+                const studentInfoResponse = await fetch(`${studentInfoURL}?srno=${params.srno}`);
+                const studentResponseText = await studentInfoResponse.text();
+                let studentInfo = JSON.parse(studentResponseText) as any;
+                paymentNewEntryData.srno = studentInfo.srno;
+                paymentNewEntryData.name = studentInfo.name;
+                paymentNewEntryData.ay = studentInfo['admission ay'];
+                paymentNewEntryData.classname = studentInfo.classname;
+            }
             setNewEntryData(paymentNewEntryData);
             setStudentList(studentList);
             //console.log(JSON.parse(responseText) as any);

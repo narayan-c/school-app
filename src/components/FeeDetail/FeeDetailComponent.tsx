@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
+import {Config} from "../../config";
 
 
-const feeDetailUrl = 'https://pps-api.onrender.com/getStudents/showfeedetails?srno=';
+const feeDetailUrl = `${Config.BASE_URL}/getStudents/showfeedetails?srno=`;
 
 interface FeeDetailProperties {
     head: string,

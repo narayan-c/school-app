@@ -3,9 +3,10 @@ import InPlaceEditingTableComponent, {
     NewEntryColumn
 } from "../InPlaceEditingTable/inPlaceEditingTableComponent";
 import {useEffect, useState} from "react";
+import {Config} from "../../config";
 
 
-const url = 'https://pps-api.onrender.com/courses/getallcourses';//'https://pps-api.onrender.com/getStudents/getallstudents';
+const url = `${Config.BASE_URL}/courses/getallcourses`;//'https://pps-api.onrender.com/getStudents/getallstudents';
 
 interface CourseProperties {
     courseid: string,
