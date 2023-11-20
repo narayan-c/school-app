@@ -27,7 +27,7 @@ function LandingPage()  {
     };
     return (
         <div>
-       {loginInfo.isLoggedIn ? (<Navigate to="/dashboard" replace={true} />) :
+       {loginInfo.isLoggedIn ? (<Navigate to="/students" replace={true} />) :
                (<div style={backgroundStyle}>
                     <div style={{display: "inline-block", margin: "auto", border: "solid", padding: 20, marginTop: "auto%"}}>
                         <h1>Parishkaaram Public School</h1>
