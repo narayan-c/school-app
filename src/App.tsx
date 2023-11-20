@@ -19,12 +19,12 @@ function App() {
     <div className="App">
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="dashboard" element={<HomePage />} />
-        <Route path="fees" element={<FeeManagementPage/>} />
-          <Route path="teachers" element={<TeachersListingComponent/>} />
-          <Route path="courses" element={<CoursesListingComponent/>} />
-          <Route path="students" element={<StudentListingComponent/>} />
-          <Route path="fees/:srno" element={<PaymentListingComponent/>} />
+        <Route path="/dashboard" element={<HomePage />} />
+        {/*<Route path="/fees" element={<FeeManagementPage/>} />*/}
+          <Route path="/teachers" element={<TeachersListingComponent/>} />
+          <Route path="/courses" element={<CoursesListingComponent/>} />
+          <Route path="/students" element={<StudentListingComponent/>} />
+          <Route path="/fees/:srno" element={<PaymentListingComponent/>} />
       </Routes>
     </div>
   );
