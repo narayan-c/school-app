@@ -11,7 +11,7 @@ function LandingPage()  {
     const loginInfo = useSelector((state: any) => state.gauth);
     const successfulSignIn = (token: string) => {
         console.log('Signin successful: ' + token);
-        //redirect to landing page now.
+        //redirect to landing page now. depending upon the usermail either redirect to adminHomePage or teacherHomePage
         navigate('/dashboard');
     }
     var backgroundImage = 'background-desktop.jpg';

@@ -1,0 +1,22 @@
+.headerContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+.columnContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 5px 10px;
+}
+
+@media (max-width: 600px) {
+    .columnContainer {
+        flex-direction: column;
+    }
+}
