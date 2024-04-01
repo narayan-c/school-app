@@ -38,9 +38,9 @@ Columns for
 export interface InPlaceEditingTableProps<T> {
     initialData: T[];
     displayColumns: DisplayColumn<T>[];
-    newEntryColumns: Record<keyof T, NewEntryColumn>;
-    newEntryData: T;
-    newEntryUniqueKeyGenerator: ()=> Promise<string>; // assuming that the uniqueKey will be of type string.
+    newEntryColumns?: Record<keyof T, NewEntryColumn>;
+    newEntryData?: T;
+    newEntryUniqueKeyGenerator?: ()=> Promise<string>; // assuming that the uniqueKey will be of type string.
     newEntryUpdateHandler?: (T) => void;
     uniqueKeyName: string;
     dataFilterFunction: (data: string) => (row: T) => boolean;
@@ -53,6 +53,8 @@ export type DisplayColumn<T> = {
         isCommonField?: boolean;
         fieldName: keyof T;
         omit: boolean;
+        width?: string;
+        sortable?: boolean;
 
 };
 export type NewEntryColumn = {
@@ -86,12 +88,13 @@ export default function InPlaceEditingTableComponent<T>(props: InPlaceEditingTab
     };
 
     function ModalInput() {
+
         /** Component for Modal*/
-        const [newEntry, setNewEntry] = useState<T>(props.newEntryData);
+        const [newEntry, setNewEntry] = useState<T>(props.newEntryData!);
         const [isInitialized, setInitialized] = useState(false);
         async function initializeNewData ()  {
-            var newData = props.newEntryData;
-            newData[props.uniqueKeyName] = await props.newEntryUniqueKeyGenerator();
+            var newData = props.newEntryData!;
+            newData[props.uniqueKeyName] = await props.newEntryUniqueKeyGenerator!();
             // for the columns which don't change(isCommonField is true) we get the value from originalList[0] data and
             // assign them in newData.
             // @ts-ignore
@@ -120,20 +123,19 @@ export default function InPlaceEditingTableComponent<T>(props: InPlaceEditingTab
             handleFilter('');
             // Reset newEntry
             //setNewEntry({ srno: "", name: "" });
-
             // Close the modal
             setShowModal(false);
         };
         return (
             <div>
-                {isInitialized ? <Modal show={showModal} onShow={()=>initializeNewData()} onHide={() => setShowModal(false)}>
+                {isInitialized? <Modal show={showModal} onShow={()=>initializeNewData()} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add New Entry</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        {Object.keys(props.newEntryColumns).map((key) => {
-                            const field = props.newEntryColumns[key];
+                        {Object.keys(props.newEntryColumns!).map((key) => {
+                            const field = props.newEntryColumns![key];
                             if (!field.editable) {
                                 return null;
                             }
@@ -298,7 +300,9 @@ export default function InPlaceEditingTableComponent<T>(props: InPlaceEditingTab
     }).map(col=>{
         let colToReturn =  {
             name: col.name,
-            omit: false
+            omit: false,
+            width: col.width,
+            sortable: col.sortable
         }
         if (col.isEditable) {
             if (col.fieldName) {
@@ -347,8 +351,8 @@ export default function InPlaceEditingTableComponent<T>(props: InPlaceEditingTab
 
     return (
         <div>
-            <CommonHeaderComponent<T> column={props.displayColumns} samplerow={props.newEntryData}/>
-            <ModalInput></ModalInput>
+            <CommonHeaderComponent<T> column={props.displayColumns} samplerow={props.newEntryData? props.newEntryData: undefined }/>
+            {props.newEntryColumns? <ModalInput></ModalInput>: <></>}
             <div className="text-end"><input type="text" onChange={(e)=>handleFilter(e.target.value)}/></div>
             <DataTable
                 responsive={true}

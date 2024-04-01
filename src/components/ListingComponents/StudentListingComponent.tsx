@@ -1,5 +1,5 @@
 import InPlaceEditingTableComponent, {
-    DisplayColumn,
+    DisplayColumn, InPlaceEditingTableProps,
     NewEntryColumn
 } from "../InPlaceEditingTable/inPlaceEditingTableComponent";
 import {useEffect, useState} from "react";
@@ -10,70 +10,31 @@ import {Config} from "../../config";
 const url = `${Config.BASE_URL}/students/getallstudents`; //'https://pps-api.onrender.com/getStudents/getallstudents';
 let navigate; // For navigation with React Router
 
-interface StudentProperties {
+export type AddedFields<T extends StudentProperties> = {
+    [K in Exclude<keyof T, keyof StudentProperties>]: T[K];
+};
+
+export type ExtendedProps<T extends StudentProperties> = AddedFields<T> & Pick<StudentProperties, 'srno'>;
+
+export interface ExtendedStudentComponentProps<T extends StudentProperties> {
+    extendedInitialData: ExtendedProps<T>[];
+    extendedDisplayColumns: DisplayColumn<AddedFields<T>>[];
+}
+
+export interface StudentProperties {
     srno: string,
     name: string,
     classname: string,
-    omit?: boolean/*,
+    note: string,
+    rte?: string,
+    siblings?: string,
+    omit?: boolean,
+    sortable?: boolean/*
     toggle?: any*/
     /*note: string,
     rte: boolean*/
 }
 
-var displayColumns: DisplayColumn<StudentProperties>[] = [
-    {
-        name: 'SRNO',
-        selector: (row) => {return <b>{row.srno}</b>},
-        isEditable: false,
-        fieldName : "srno",
-        omit: false
-    },
-    {
-        name: 'Name',
-        selector: (row) => {return <b>{row.name}</b>},
-        isEditable: false,
-        fieldName : "name",
-        omit: false
-    },
-    {
-        name: 'Class',
-        selector: (row) => {return <b>{row.classname}</b>},
-        isEditable: false,
-        fieldName : "classname",
-        omit: false
-    },
-    {
-        name: 'Payment Info',
-        selector: (row) => {return <button className="btn btn-primary" onClick={()=>{ navigate(`/fees/${row.srno}`);}}>Fee</button>
-        },
-        isEditable: false,
-        fieldName : "classname",
-        omit: false
-    }
-]
-
-var newEntryColumns : Record<keyof StudentProperties, NewEntryColumn> = {
-    "srno": {
-        label: "SrNo.",
-        type: "text",
-        editable: true
-    },
-    "name": {
-        label: "Name",
-        type: "text",
-        editable: true
-    },
-    "classname": {
-        label: "Class",
-        type: "text",
-        editable: true
-    },
-    "omit" : {
-        label: "Omit",
-        type: "text",
-        editable: false
-    }
-}
 
 
 async function newUniqueKeyGenerator() {
@@ -83,17 +44,149 @@ async function newUniqueKeyGenerator() {
     return myPromise;
 }
 
-export default function StudentListingComponent() {
+
+function createExtendedDisplayColumn<T extends StudentProperties>(props: DisplayColumn<AddedFields<T>>[], studentList: T[]) : DisplayColumn<T>[]{
+    function rednerNotes(row: T) {
+        let isRTE = false;
+        let isSiblings = false;
+        let finalHTML = <div></div>;
+        let siblings: string [] = [];
+        if (row.rte)
+            isRTE = true;
+        if (row.siblings) {
+            isSiblings = true;
+            // split row.siblings to get each sibling sr number separately.
+            // for each SRno get the name by traversing over studentList and put the name and the classname there.
+            // Step 1: Split the values
+            const srNumbers = row.siblings.split(', ');
+            // Step 2-5: Iterate and process each SR number
+            srNumbers.forEach(sr => {
+                // Step 3: Search the array of JSON objects based on SR number
+                const foundObject = studentList.find(item => item.srno === sr.split('-')[1]);
+
+                // Step 4: Retrieve other fields for that SR number
+                if (foundObject) {
+                    console.log("Object found" + foundObject.name + ", " + foundObject.classname);
+                    siblings.push(`${foundObject.name}(${foundObject.classname})`);
+                    // Use concatenatedValue as needed
+                }
+            });
+
+        }
+        finalHTML = (
+            <>
+                {isRTE ? <u>RTE<br /></u> : ''}
+                {row.siblings ? (
+                    <>
+                        <b>Siblings:<br /></b>
+                        {siblings.map((sibling, index) => (
+                            <div key={index}>{sibling}</div>
+                        ))}
+                    </>
+                ) : ''}
+            </>
+        );
+        return finalHTML;
+    }
+    var displayColumns = [
+        {
+            name: 'SRNO',
+            selector: (row) => {return <b>{row.srno}</b>},
+            isEditable: false,
+            fieldName : "srno",
+            omit: false,
+            width: '5rem',
+            sortable: true
+        },
+        {
+            name: 'Name',
+            selector: (row) => {return <b>{row.name}</b>},
+            isEditable: false,
+            fieldName : "name",
+            omit: false,
+            width: '12rem',
+
+        },
+        {
+            name: 'Class',
+            selector: (row) => {return <b>{row.classname}</b>},
+            isEditable: false,
+            fieldName : "classname",
+            omit: false,
+            width: '6rem',
+            sortable: true
+
+        },
+        {
+            name: 'Notes',
+            selector: (row) => {return <>{rednerNotes(row)}</>},
+            isEditable: false,
+            fieldName : "Notes",
+            omit: false,
+            width: '14rem'
+        },
+        {
+            name: 'Payment Info',
+            selector: (row) => {return <button className="btn btn-primary" onClick={()=>{ navigate(`/fees/${row.srno}`);}}>Fee</button>
+            },
+            isEditable: false,
+            fieldName : "classname",
+            omit: false,
+            width: '8rem'
+
+        },
+        ...props
+    ] as DisplayColumn<T>[];
+    return displayColumns;
+}
+
+
+
+export default function StudentListingComponent<T extends StudentProperties>(props: ExtendedStudentComponentProps<T>) {
+    function createExtendedData<T extends StudentProperties>(
+        baseData: StudentProperties[],
+        otherProps: ExtendedProps<T>[]
+    ): T[] {        // iterate over baseData and props and merge them based on srno.
+        // Create a map to hold merged objects
+        // Create a map to index baseData by srno
+        const baseDataMap = new Map<string, StudentProperties>();
+        baseData.forEach(item => baseDataMap.set(item.srno, item));
+        // Merge props into baseData
+        const mergedData: T[] = otherProps.map(propItem => {
+            const baseItem = baseDataMap.get(propItem.srno);
+            if (baseItem) {
+                return { ...baseItem, ...propItem } as T;
+            }
+            return propItem as T;
+        });
+        return mergedData;
+    }
     navigate = useNavigate();
-    const [studentList, setStudentList] = useState<StudentProperties[]>([] as StudentProperties[]);
+    const [studentList, setStudentList] = useState<T[]>([] as T[]);
     const [dataLoaded, setDataLoaded] = useState(false);
-    var newEntryData: StudentProperties = {srno: '', name: '', classname: '', omit: false};
     var uniqueKeyName = "srno";
-    var uniqueKeyPrefix = "sr-";
-    const dataFilterFunction = (data: string) => (row: StudentProperties) => {
+    const stripTags = (jsxElement) => {
+        if (typeof jsxElement === 'string') {
+            return jsxElement; // If the element is already a string, return it
+        }
+
+        if (Array.isArray(jsxElement)) {
+            // If the element is an array, concatenate text content of each item
+            return jsxElement.map(stripTags).join('');
+        }
+
+        // If the element is an object (React element), recursively process its children
+        const { props } = jsxElement;
+        if (props && props.children) {
+            return stripTags(props.children);
+        }
+
+        return '';
+    };
+    const dataFilterFunction = (data: string) => (row: T) => {
         // check if data appears in any field of row then return true.
         return (row.srno.toLowerCase().includes(data.toLowerCase()) || row.classname.toLowerCase().includes(data.toLowerCase())
-            || row.name.toLowerCase().includes(data.toLowerCase()));
+            || row.name.toLowerCase().includes(data.toLowerCase()) || stripTags(displayColumns[3].selector(row)).toLowerCase().includes(data.toLowerCase()));
     }
     /** Function to get data from the backend**/
     async function getData() {
@@ -103,8 +196,11 @@ export default function StudentListingComponent() {
             //setStudentList({} as []);
             const response = await fetch(url);
             const responseText = await response.text();
-            setStudentList(JSON.parse(responseText) as any);
-            console.log(JSON.parse(responseText) as any);
+            // save responseText as array of StudentProperties.
+            let studentInfo = JSON.parse(responseText) as StudentProperties[];
+            // now pass studentInfo and props.extendedInitialData to createExtendedData method.
+            let combinedStudentData = createExtendedData(studentInfo, props.extendedInitialData);
+            setStudentList(combinedStudentData);
             setDataLoaded(true);
         } catch (error) {
             console.log('setting data as empty')
@@ -113,17 +209,14 @@ export default function StudentListingComponent() {
     }
     // after rendering of component get the data
     useEffect(() => {
-
         getData();
-
     },[]);
+    let displayColumns = createExtendedDisplayColumn(props.extendedDisplayColumns, studentList);
     return (
         <div>
-        {dataLoaded ? <InPlaceEditingTableComponent<StudentProperties>
+        {dataLoaded ? <InPlaceEditingTableComponent<T>
             initialData={studentList}
             displayColumns={displayColumns}
-            newEntryColumns={newEntryColumns}
-            newEntryData={newEntryData}
             uniqueKeyName={uniqueKeyName}
             dataFilterFunction={dataFilterFunction}
          newEntryUniqueKeyGenerator={newUniqueKeyGenerator}/> : <p>Loading</p>}

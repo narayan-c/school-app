@@ -5,11 +5,13 @@ import InPlaceEditingTableComponent, {
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {Config} from "../../config";
+import { Modal, Button } from 'react-bootstrap';
 
 
 const url = `${Config.BASE_URL}/students/getpaymentdetails`; //'https://pps-api.onrender.com/getStudents/getallstudents';
 const newidurl = `${Config.BASE_URL}/students/getnewpaymentid`; //'https://pps-api.onrender.com/getStudents/getallstudents';
 const studentInfoURL = `${Config.BASE_URL}/students/getstudentinfo`;
+const addpaymentDetailURL = `${Config.BASE_URL}/students/addpaymentdetails`;
 interface PaymentProperties {
     paymentid: string,
     srno: string,
@@ -135,16 +137,21 @@ async function newUniqueKeyGenerator() {
     return responseText;
 }
 
-function addNewEntryHandler(newEntry: PaymentProperties) {
-    // from the object pick only those fields which need to be saved.
-    // In this case they are, SRNo, paymentid, amount, date,notes
-    console.log(`Saving ${newEntry.paymentid}, ${newEntry.srno}, ${newEntry.paymentamount}, ${newEntry.date}, ${newEntry.notes}`);
-}
+
 export default function PaymentListingComponent() {
     const params = useParams();
     const [studentList, setStudentList] = useState<PaymentProperties[]>([] as PaymentProperties[]);
     const [dataLoaded, setDataLoaded] = useState(false);
     const [newEntryData, setNewEntryData] = useState<PaymentProperties>({paymentid: '', srno: '', name: '', classname: '', ay: '', paymentamount: 0, date: '', notes: '', omit: false});
+    const [isModalOpen, setModalOpen] = useState(false);
+
+    const openModal = () => {
+        setModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalOpen(false);
+    };
     var uniqueKeyName = "paymentid";
     var uniqueKeyPrefix = "payment-";
     const dataFilterFunction = (data: string) => (row: PaymentProperties) => {
@@ -152,6 +159,14 @@ export default function PaymentListingComponent() {
         return (row.name.toLowerCase().includes(data.toLowerCase()) || row.notes.toLowerCase().includes(data.toLowerCase())
             || row.date.toLowerCase().includes(data.toLowerCase())
             );
+    }
+    async function addNewEntryHandler(newEntry: PaymentProperties) {
+        // from the object pick only those fields which need to be saved.
+        // In this case they are, SRNo, paymentid, amount, date,notes
+        console.log(`Saving ${newEntry.paymentid}, ${newEntry.srno}, ${newEntry.paymentamount}, ${newEntry.date}, ${newEntry.notes}`);
+        await fetch(`${addpaymentDetailURL}?paymentid=${newEntry.paymentid}&srno=${newEntry.srno}&amount=${newEntry.paymentamount}&date=${newEntry.date}&notes=${newEntry.notes}`)
+        openModal();
+
     }
     /** Function to get data from the backend**/
     async function getData() {
@@ -196,6 +211,19 @@ export default function PaymentListingComponent() {
     },[]);
     return (
         <div>
+            <Modal show={isModalOpen} onHide={closeModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Add Status</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Entry added successfully!</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={closeModal}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         {dataLoaded ? <InPlaceEditingTableComponent<PaymentProperties>
             initialData={studentList}
             displayColumns={displayColumns}
