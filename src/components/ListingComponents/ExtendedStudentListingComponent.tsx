@@ -123,7 +123,7 @@ var extendedDisplayColumns: DisplayColumn<AddedFields<FeeDetails>>[] = [
         selector: (row) => {return <div> {getFormattedPaymentColumn(row)}</div>},
         isEditable: false,
         fieldName : "paymentDetails",
-        omit: false,
+        omit: true,
         width: '25rem'
 
 

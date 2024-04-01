@@ -131,7 +131,7 @@ function createExtendedDisplayColumn<T extends StudentProperties>(props: Display
             },
             isEditable: false,
             fieldName : "classname",
-            omit: false,
+            omit: true,
             width: '8rem'
 
         },
