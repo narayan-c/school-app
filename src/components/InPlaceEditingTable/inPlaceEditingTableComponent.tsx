@@ -363,8 +363,8 @@ export default function InPlaceEditingTableComponent<T>(props: InPlaceEditingTab
                 pagination
                 highlightOnHover
             />
-            <div style={{position: 'fixed', textAlign: 'center', ...floatingIcon}} onClick={() => setShowModal(true)}><i className="fas fa-plus"></i>
-            </div>
+            {/*<div style={{position: 'fixed', textAlign: 'center', ...floatingIcon}} onClick={() => setShowModal(true)}><i className="fas fa-plus"></i>
+            </div>*/}
         </div>
     );
 }
