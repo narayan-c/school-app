@@ -344,10 +344,10 @@ export default function InPlaceEditingTableComponent<T>(props: InPlaceEditingTab
     const breakpoint = 768; // example breakpoint
     const regularColumns = windowWidth > breakpoint
         ? column  // Display all columns for larger screens
-        : column.slice(0, 3);  // Display only the first 3 columns for smaller screens
+        : column.slice(0, 4);  // Display only the first 4 columns for smaller screens
     const expandableColumns = windowWidth > breakpoint
         ? []  // No expandable columns for larger screens
-        : column.slice(3);  // Make the rest of the columns expandable
+        : column.slice(4);  // Make the rest of the columns expandable
 
     return (
         <div>
