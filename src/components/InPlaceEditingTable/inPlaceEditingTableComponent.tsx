@@ -357,6 +357,7 @@ export default function InPlaceEditingTableComponent<T>(props: InPlaceEditingTab
             <DataTable
                 responsive={true}
                 columns={regularColumns}
+                paginationPerPage={50}
                 data={displayData}
                 expandableRows={expandableColumns.length >0? true: false}
                 expandableRowsComponent={ExpandedComponent(expandableColumns)}
