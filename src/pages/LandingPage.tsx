@@ -32,7 +32,7 @@ function LandingPage()  {
                     <div style={{display: "inline-block", margin: "auto", border: "solid", padding: 20, marginTop: "auto%"}}>
                         <h1>Parishkaaram Public School</h1>
                         <p>For better education</p>
-                        <GoogleLoginComponent callback={successfulSignIn}/>
+                        {/*<GoogleLoginComponent callback={successfulSignIn}/>*/}
                     </div>
                 </div>)
        }
