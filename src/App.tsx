@@ -15,12 +15,12 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        {/*<Route path="/" element={<LandingPage />} />*/}
         <Route path="/dashboard" element={<HomePage />} />
         {/*<Route path="/fees" element={<FeeManagementPage/>} />*/}
           <Route path="/teachers" element={<TeachersListingComponent/>} />
           <Route path="/courses" element={<CoursesListingComponent/>} />
-          <Route path="/students" element={<ExtendedStudentListingComponent/>} />
+          <Route path="/" element={<ExtendedStudentListingComponent/>} />
           <Route path="/fees/:srno" element={<PaymentListingComponent/>} />
       </Routes>
     </div>
